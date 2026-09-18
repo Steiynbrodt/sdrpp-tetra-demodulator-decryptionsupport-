@@ -37,7 +37,7 @@ endif ()
 
 
 if (TETRA_BUILD_PLUGIN)
-    include(${SDRPP_MODULE_CMAKE})
+include(${SDRPP_MODULE_CMAKE})
 
     if(MSVC)
       # target_compile_options(tetra_demodulator PRIVATE /W4 /WX)
@@ -46,6 +46,9 @@ if (TETRA_BUILD_PLUGIN)
     endif()
 
     target_include_directories(tetra_demodulator PRIVATE BEFORE "src/" "src/decoder/src" "src/decoder/codec" )
+endif()
+
+target_include_directories(tetra_demodulator PRIVATE BEFORE "src/" "src/decoder/src" "src/decoder/codec" )
 endif()
 
 include(CTest)
@@ -60,10 +63,5 @@ if(BUILD_TESTING)
         src/decoder/src/crypto/hurdle.c
         src/decoder/src/tetra_common.c)
     target_include_directories(tetra_crypto_test PRIVATE "src/decoder/src" "src/decoder/codec")
-    if(MSVC)
-        target_compile_options(tetra_crypto_test PRIVATE /UNDEBUG)
-    else()
-        target_compile_options(tetra_crypto_test PRIVATE -UNDEBUG)
-    endif()
     add_test(NAME tetra_crypto_test COMMAND tetra_crypto_test)
 endif()
