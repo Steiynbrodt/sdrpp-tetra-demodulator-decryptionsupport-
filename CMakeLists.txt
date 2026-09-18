@@ -49,7 +49,7 @@ include(${SDRPP_MODULE_CMAKE})
 endif()
 
 target_include_directories(tetra_demodulator PRIVATE BEFORE "src/" "src/decoder/src" "src/decoder/codec" )
-endif()
+
 
 include(CTest)
 if(BUILD_TESTING)
