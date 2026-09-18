@@ -98,3 +98,15 @@ Only receive and decrypt systems or recordings that you are legally authorized
 to access. Applicable radio, privacy, and cryptography laws vary by jurisdiction.
 
  
+
+Running crypto tests without SDR++
+----------------------------------
+
+The crypto tests have a standalone CMake project and do not alter the plugin's
+normal CMake workflow:
+
+```
+cmake -S tests -B build-tests
+cmake --build build-tests
+ctest --test-dir build-tests --output-on-failure
+```
