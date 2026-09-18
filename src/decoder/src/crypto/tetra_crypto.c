@@ -256,7 +256,8 @@ bool decrypt_identity(struct tetra_crypto_state *tcs, struct tetra_addr *addr)
 
 bool decrypt_mac_element(struct tetra_crypto_state *tcs, struct tetra_tmvsap_prim *tmvp, struct tetra_key *key, int l1_len, int tmpdu_offset)
 {
-	if (!key || l1_len - tmpdu_offset <= 0)
+	if (!tcs || !tmvp || !key || tmpdu_offset < 0 || l1_len <= 0 ||
+	    tmpdu_offset >= l1_len)
 		return false;
 
 	if (tcs->cn < 0 || tcs->la < 0 || tcs->cc < 0) {
@@ -331,8 +332,16 @@ bool decrypt_voice_timeslot(struct tetra_crypto_state *tcs, struct tetra_tdma_ti
 
 	/* Apply keystream */
 	for (int i = 0; i < 137; i++) {
-		type1_block[i + 1] = type1_block[i + 1] ^ ks[i];
-		type1_block[i + 139] = type1_block[i + 139] ^ ks[i + 137];
+		if (ks[i]) {
+			int16_t *bit = &type1_block[i + 1];
+			/* Channel_Decoding may emit either hard 0/1 bits or ETSI
+			 * soft decisions. XOR the former and reverse the latter. */
+			*bit = (*bit == 0 || *bit == 1) ? (*bit ^ 1) : -*bit;
+		}
+		if (ks[i + 137]) {
+			int16_t *bit = &type1_block[i + 139];
+			*bit = (*bit == 0 || *bit == 1) ? (*bit ^ 1) : -*bit;
+		}
 	}
 
 	// printf("tetra_crypto: addr %8d -> key %4d, time %5d/%s, decrypted voice\n",

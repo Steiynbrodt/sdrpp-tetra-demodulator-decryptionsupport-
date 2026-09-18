@@ -42,8 +42,8 @@ namespace dsp {
             tetra_crypto_db_clear(&crypto_db);
             free(tms->fragslots);
             free(trs);
-            free(tms->t_display_st);
-            free(tms->tcs);
+            free(tms ? tms->t_display_st : nullptr);
+            free(tms ? tms->tcs : nullptr);
             free(tms);
             
             free(conv_data);

@@ -39,10 +39,13 @@ endif ()
 if (TETRA_BUILD_PLUGIN)
 include(${SDRPP_MODULE_CMAKE})
 
-if(MSVC)
-  # target_compile_options(tetra_demodulator PRIVATE /W4 /WX)
-else()
-  # target_compile_options(tetra_demodulator PRIVATE -Wall -Wextra)
+    if(MSVC)
+      # target_compile_options(tetra_demodulator PRIVATE /W4 /WX)
+    else()
+      # target_compile_options(tetra_demodulator PRIVATE -Wall -Wextra)
+    endif()
+
+    target_include_directories(tetra_demodulator PRIVATE BEFORE "src/" "src/decoder/src" "src/decoder/codec" )
 endif()
 
 target_include_directories(tetra_demodulator PRIVATE BEFORE "src/" "src/decoder/src" "src/decoder/codec" )
