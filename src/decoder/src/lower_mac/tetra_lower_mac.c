@@ -355,10 +355,8 @@ void tp_sap_udata_ind(enum tp_sap_data_type type, int blk_num, const uint8_t *bi
 					traffic->decrypt_attempted = true;
 					traffic->decrypt_succeeded = decrypt_voice_timeslot(
 						tms->tcs, &tup->tdma_time, cdecoder_output);
-					/* A missing key or incomplete SYSINFO must not suppress the
-					 * legacy speech path. decrypt_voice_timeslot() leaves the block
-					 * untouched on failure, so continue exactly as before and let
-					 * the UI explain why decryption was unavailable. */
+					if (!traffic->decrypt_succeeded)
+						break;
 				}
 			}
 			

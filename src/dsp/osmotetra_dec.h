@@ -39,13 +39,8 @@ namespace dsp {
         osmotetradec() {}
         
         ~osmotetradec() {
-            if (tms && tms->fragslots) {
-                for (int i = 0; i < FRAGSLOT_NR_SLOTS; i++) {
-                    cleanup_fragslot(&tms->fragslots[i]);
-                }
-            }
             tetra_crypto_db_clear(&crypto_db);
-            free(tms ? tms->fragslots : nullptr);
+            free(tms->fragslots);
             free(trs);
             free(tms ? tms->t_display_st : nullptr);
             free(tms ? tms->tcs : nullptr);

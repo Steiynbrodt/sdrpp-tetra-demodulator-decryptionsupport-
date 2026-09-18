@@ -64,8 +64,6 @@ path, and select **Load**. **Reload** transactionally replaces a previously
 loaded file and **Clear** unloads all keys. The path and key material are not
 written to `tetra_demodulator_config.json`. An invalid or missing file reports
 an error and leaves the active keystore and clear-TETRA decoder operational.
-The updated module reports version 0.3.0 and shows `v0.3.0` beside this heading;
-if that section is absent, SDR++ is still loading an older plugin binary.
 
 The text format contains one definition per line; blank lines and lines whose
 first non-space character is `#` are ignored:

@@ -329,8 +329,6 @@ private:
             }
             ImGui::Separator();
             ImGui::TextUnformatted("Crypto / Encryption (authorized keys only)");
-            ImGui::SameLine();
-            ImGui::TextDisabled("v0.3.0");
             ImGui::SetNextItemWidth(menuWidth);
             ImGui::InputText(CONCAT("Key file##tetra_keys_", _this->name),
                              _this->keyFilePath, sizeof(_this->keyFilePath));
@@ -355,35 +353,19 @@ private:
                 _this->keyStoreMessage = "keystore cleared";
             }
             const dsp::TetraCryptoStatus crypto = _this->osmotetradecoder.getCryptoStatus();
-            ImGui::Text("Networks: %u | Keys: %u | State:",
-                        crypto.networkCount, crypto.keyCount);
-            ImGui::SameLine();
-            const bool cryptoReady = crypto.state == "ready";
-            const bool cryptoWaiting = crypto.state == "no keys loaded" ||
-                                       crypto.state.find("waiting for") == 0;
-            ImGui::TextColored(cryptoReady ? on_color :
-                               (cryptoWaiting ? ImVec4(0.95, 0.75, 0.05, 1.0) : off_color),
-                               "%s", crypto.state.c_str());
+            ImGui::Text("Networks: %u | Keys: %u | State: %s",
+                        crypto.networkCount, crypto.keyCount, crypto.state.c_str());
             ImGui::Text("Detected MCC/MNC: %d/%d | KSG: %s | CCK/SCK: %d",
                         crypto.mcc, crypto.mnc, tetra_get_ksg_type_name((tetra_ksg_type)crypto.ksg),
                         crypto.cckId);
-            ImGui::Text("Network:"); ImGui::SameLine();
-            ImGui::TextColored(crypto.networkSelected ? on_color : off_color, "%s",
-                               crypto.networkSelected ? "matched" : "not matched");
-            ImGui::SameLine(); ImGui::Text("| Key:"); ImGui::SameLine();
-            ImGui::TextColored(crypto.keySelected ? on_color : off_color, "%s",
-                               crypto.keySelected ? "matched" : "not matched");
-            ImGui::SameLine(); ImGui::Text("| TS: %d | UM: %d | mode: %d",
-                                           crypto.timeslot, crypto.usageMarker,
-                                           crypto.encryptionMode);
-            ImGui::Text("Traffic: %s | Decrypt:",
-                        crypto.trafficEncrypted ? "encrypted" : "clear/not assigned");
-            ImGui::SameLine();
-            ImGui::TextColored(crypto.decryptSucceeded ? on_color :
-                               (crypto.decryptAttempted ? off_color :
-                                ImVec4(0.95, 0.75, 0.05, 1.0)), "%s",
-                               !crypto.decryptAttempted ? "not attempted" :
-                               (crypto.decryptSucceeded ? "succeeded" : "failed"));
+            ImGui::Text("Network: %s | Key: %s | TS: %d | UM: %d | mode: %d",
+                        crypto.networkSelected ? "matched" : "not matched",
+                        crypto.keySelected ? "matched" : "not matched", crypto.timeslot,
+                        crypto.usageMarker, crypto.encryptionMode);
+            ImGui::Text("Traffic: %s | Decrypt: %s",
+                        crypto.trafficEncrypted ? "encrypted" : "clear/not assigned",
+                        !crypto.decryptAttempted ? "not attempted" :
+                        (crypto.decryptSucceeded ? "succeeded" : "failed"));
             if (!_this->keyStoreMessage.empty())
                 ImGui::TextWrapped("%s", _this->keyStoreMessage.c_str());
         } else {
