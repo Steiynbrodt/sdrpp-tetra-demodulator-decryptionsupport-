@@ -344,6 +344,23 @@ void tp_sap_udata_ind(enum tp_sap_data_type type, int blk_num, const uint8_t *bi
 			for(int i = 0; i < 137; i++) {
 				cdecoder_output[139+i] = Reordered_array[137+i];
 			}
+			/* Air-interface encryption is applied to the type-1 speech bits.
+			 * Decrypt only the allocation matching this timeslot and usage marker;
+			 * the cell-wide encryption capability flag does not imply an encrypted call. */
+			if (tup->tdma_time.tn >= 1 && tup->tdma_time.tn <= 4) {
+				struct tetra_traffic_crypto_state *traffic =
+					&tms->traffic_crypto[tup->tdma_time.tn - 1];
+				if (traffic->assigned && traffic->encrypted &&
+				    traffic->usage_marker == tms->cur_burst.is_traffic) {
+					traffic->decrypt_attempted = true;
+					traffic->decrypt_succeeded = decrypt_voice_timeslot(
+						tms->tcs, &tup->tdma_time, cdecoder_output);
+					/* A missing key or incomplete SYSINFO must not suppress the
+					 * legacy speech path. decrypt_voice_timeslot() leaves the block
+					 * untouched on failure, so continue exactly as before and let
+					 * the UI explain why decryption was unavailable. */
+				}
+			}
 			
 			int16_t parm[24];
 			int16_t synth[480];
