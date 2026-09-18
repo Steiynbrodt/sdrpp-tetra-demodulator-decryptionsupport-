@@ -64,4 +64,4 @@ if(BUILD_TESTING)
         src/decoder/src/tetra_common.c)
     target_include_directories(tetra_crypto_test PRIVATE "src/decoder/src" "src/decoder/codec")
     add_test(NAME tetra_crypto_test COMMAND tetra_crypto_test)
-endif()
+
