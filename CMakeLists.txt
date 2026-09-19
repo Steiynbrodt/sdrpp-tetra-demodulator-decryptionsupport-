@@ -45,11 +45,8 @@ include(${SDRPP_MODULE_CMAKE})
       # target_compile_options(tetra_demodulator PRIVATE -Wall -Wextra)
     endif()
 
-    target_include_directories(tetra_demodulator PRIVATE BEFORE "src/" "src/decoder/src" "src/decoder/codec" )
+    target_include_directories(tetra_demodulator PRIVATE BEFORE "src/" "src/decoder/src" "src/decoder/codec")
 endif()
-
-target_include_directories(tetra_demodulator PRIVATE BEFORE "src/" "src/decoder/src" "src/decoder/codec" )
-
 
 include(CTest)
 if(BUILD_TESTING)
@@ -64,4 +61,4 @@ if(BUILD_TESTING)
         src/decoder/src/tetra_common.c)
     target_include_directories(tetra_crypto_test PRIVATE "src/decoder/src" "src/decoder/codec")
     add_test(NAME tetra_crypto_test COMMAND tetra_crypto_test)
-
+endif()
